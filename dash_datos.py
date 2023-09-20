@@ -6,6 +6,7 @@
 # ------------------------------
 
 import streamlit as st
+from PIL import Image
 #with open ("style.css") as f:
 #    st.markdown(f"<styles>{f.read()}</styles>", unsafe_allow_html=True)
 import plotly.express as px
@@ -14,20 +15,29 @@ import os
 import warnings
 from datetime import timedelta
 warnings.filterwarnings('ignore')
+ruta = r'C:\Users\eci\project\GEMINI13_digitalTwin\assets\csv'
+os.chdir(ruta)
 
 # PASO 2.- CONFIGURAMOS EL INICIO DE LA WEB
 # ------------------------------------------
-gemini_icon = './assets/images/banner.png'
+gemini_icon = 'FavIcon.png'
+banner_image = 'banner.png'
 humidity_icon = './assets/icons/humidity.png'
 cv_icon = './assets/icons/cv.png'
-diameter_icon = './assets/icons/diameter.png'
+#diameter_icon = './diameter.png'
 battery_icon = './assets/icons/battery.png'
 temperature_icon = './assets/icons/temperature.png'
 # Título de la pestaña de la app web
 st.set_page_config(page_title='GEMINIODS13', page_icon=gemini_icon, layout='wide')
-banner_image = st.image("./assets/images/banner.png", use_column_width=True)
+
+header_image = 'https://dsm01pap006files.storage.live.com/y4mP2gmZr6e3P0-UIlDQkSWxOBBzeDFyHKJOKRalck8vr2OrkxyPy7TPboIrDAB2NkrNprvVEW73ZAmh-dixjC2ECMN6QV8a5OPsWeCmkb8O79Znluw8X30M57KxEu1CDrr_9IUyhw7xhdcjVpyl4I0rufOR0Zj1KvxSA07a2V-LHPDraYw9frSmubF760NSiAHlEz5AZwHwTZvtCCUZos9UA?encodeFailures=1&width=1920&height=552'
+
+# Título personalizado con imagen y texto
+st.image(header_image, use_column_width=True)  # Mostrar la imagen
+
+
 # Título general común a todas las páginas
-st.title('Gemini 13: Gemelo Digital')
+st.title('GEMINI ODS 13: Gemelo Digital')
 
 
 # Esto hace que el margen superior sea más pequeño, pues por efecto está muy separado
@@ -41,8 +51,7 @@ st.markdown('<style>div.block-container{padding-top:2rem;}</style',
 
 
 # Elegimos como directorio de trabajo aquel donde se encuentren los datos
-ruta = r'C:\Users\eci\project\Visualizacion\assets\csv'
-os.chdir(ruta)
+
 
 # Datos de diámetro del tall
 df = pd.read_csv("diametro.csv")
@@ -187,6 +196,15 @@ def indicador_metrica(valor, delta, unidad=''):
         color:#3F7E44;
 
     }}
+    .css-164nlkn{{
+        display:none
+    }}
+    .st-dw {{
+        background-color: rgb(225 241 229);
+    }}
+    .st-dl {{
+        background-color: #3C1A0B;
+    }}
     .st-dp{{
         border-bottom-left-radius: 0px;
     }}
@@ -198,6 +216,9 @@ def indicador_metrica(valor, delta, unidad=''):
     }}
     .st-dm{{
         border-top-left-radius: 0px;
+    }}
+    .st-dn {{
+        border-top-left-radius: 0;
     }}
     
     .st-aw{{
@@ -228,6 +249,7 @@ def indicador_metrica(valor, delta, unidad=''):
         font-family: 'Barlow', sans-serif;
         font-weight: 600; /* Semibold o Bold según tus necesidades */
     }}
+
     .metric-container {{
         display: flex;
         align-items: center;
@@ -302,7 +324,7 @@ def grafico_linea(dataframe, frecuencia, marcador, date1, date2, text='Medida'):
     df_combinado = pd.merge(combinaciones_df, linechart, how='left', on=['type_name', 'registered_date'])
 
     # Dibujamos el gráfico de lineas de la medida en cuestión en función de la fecha, distinguiendo por colores
-    fig2 = px.line(df_combinado, x='registered_date', y='average', color= 'type_name', 
+    fig2 = px.line(df_combinado, x='registered_date', y='average',color='type_name', color_discrete_sequence=['#3F7E44', '#C73E01', '#F59500', '#273E8A', '#3C1A0B', '#631675'], 
                    labels={'average': text + f' ({unidad})', 'registered_date': 'Fecha', 'type_name': 'Tipo'},
                    height=525, width=1000, hover_data=['type_name']) #, template='gridon')
     
@@ -456,8 +478,8 @@ def page_analysis():
     st.markdown('---')
  
     #st.markdown('## :battery: Voltaje de la batería y del panel solar')
-    custom_icon_path = "./assets/icons/battery.png"  # Reemplaza con la ruta de tu ícono
-    st.markdown(f'<h2><img src="{custom_icon_path}" alt="Ícono personalizado" width="50" height="50"> Voltaje de la batería y del panel solar</h2>', unsafe_allow_html=True)
+    custom_icon_path = './assets/icons/battery.png'  # Reemplaza con la ruta de tu ícono
+    st.markdown(f'<h2><img src="./assets/icons/battery.png" alt="Ícono personalizado" width="50" height="50"> Voltaje de la batería y del panel solar</h2>', unsafe_allow_html=True)
     show_dashboard(voltage_f, voltage_mean, key='Voltaje', rango_semaforo=voltage_range,
                    date1=date1, date2=date2)
     st.markdown('---')
