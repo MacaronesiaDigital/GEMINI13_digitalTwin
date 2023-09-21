@@ -15,26 +15,16 @@ import os
 import warnings
 from datetime import timedelta
 warnings.filterwarnings('ignore')
-ruta = r'C:\Users\eci\project\GEMINI13_digitalTwin\assets\csv'
-os.chdir(ruta)
+
 
 # PASO 2.- CONFIGURAMOS EL INICIO DE LA WEB
 # ------------------------------------------
-gemini_icon = 'FavIcon.png'
-banner_image = 'banner.png'
-humidity_icon = './assets/icons/humidity.png'
-cv_icon = './assets/icons/cv.png'
-#diameter_icon = './diameter.png'
-battery_icon = './assets/icons/battery.png'
-temperature_icon = './assets/icons/temperature.png'
+gemini_icon = 'https://dsm01pap006files.storage.live.com/y4m3V8LKKeJnD1a0AxWuavohyGInpEWlBwM9566v8gNlx-RN4_yOWlh_68BxT4vkCUstW03fmOoq9jBq-wML_0Awh_91SukCAvnfCesAtnzOp8mp5SALfWGPXqFxfb2_Fmf90tsXoNw4ZbI6XECVcmi2Q5QIfKMd9PczrYgx3qPjuc19_FF4dEbzWfpX9v4EAUbL0YKD1U-1nU0CXQA0RxHWg?encodeFailures=1&width=500&height=500'
 # Título de la pestaña de la app web
 st.set_page_config(page_title='GEMINIODS13', page_icon=gemini_icon, layout='wide')
 
 header_image = 'https://dsm01pap006files.storage.live.com/y4mP2gmZr6e3P0-UIlDQkSWxOBBzeDFyHKJOKRalck8vr2OrkxyPy7TPboIrDAB2NkrNprvVEW73ZAmh-dixjC2ECMN6QV8a5OPsWeCmkb8O79Znluw8X30M57KxEu1CDrr_9IUyhw7xhdcjVpyl4I0rufOR0Zj1KvxSA07a2V-LHPDraYw9frSmubF760NSiAHlEz5AZwHwTZvtCCUZos9UA?encodeFailures=1&width=1920&height=552'
-
-# Título personalizado con imagen y texto
-st.image(header_image, use_column_width=True)  # Mostrar la imagen
-
+st.markdown(f'<img src="{header_image}">', unsafe_allow_html=True)
 
 # Título general común a todas las páginas
 st.title('GEMINI ODS 13: Gemelo Digital')
@@ -49,9 +39,9 @@ st.markdown('<style>div.block-container{padding-top:2rem;}</style',
 # PASO 3.1- CARGAMOS LOS DATOS
 
 
-
 # Elegimos como directorio de trabajo aquel donde se encuentren los datos
-
+ruta = r'C:\Users\eci\project\GEMINI13_digitalTwin\assets\csv'
+os.chdir(ruta)
 
 # Datos de diámetro del tall
 df = pd.read_csv("diametro.csv")
@@ -191,10 +181,22 @@ def indicador_metrica(valor, delta, unidad=''):
     st.markdown(
     f"""
     <style>
+    .css-5rimss img{{
+        width:90%;
+    }}
+    img.icon {{
+        max-width: 60px;
+        width: 100%; 
+        height: auto; 
+        margin-right:20px;
+    }}
     .css-de76by ul, li{{
         border-radius: 0px;
         color:#3F7E44;
 
+    }}
+    css-1bdkhir{{
+        background-color:#3F7E44;
     }}
     .css-164nlkn{{
         display:none
@@ -449,7 +451,8 @@ startDate_def = endDate -timedelta(days=4)
 
 def page_analysis():
     st.markdown(f'<h2> Visualización de datos</h2>', unsafe_allow_html=True)
-    st.write('Esta es la página donde se muestran las gráficas interactivas de los datos en determinados rangos temporales.')
+    st.markdown(f'<p style="color:#3C1A0B; font-family: "Barlow", sans-serif; font-weight: 600;"> Esta es la página donde se muestran las gráficas interactivas de los datos en determinados rangos temporales.</p>', unsafe_allow_html=True)
+    #st.write('Esta es la página donde se muestran las gráficas interactivas de los datos en determinados rangos temporales.')
     st.markdown('---')
 
     st.markdown(f'<h4>Selección de fechas</h4>', unsafe_allow_html=True)
@@ -471,30 +474,40 @@ def page_analysis():
     humidity_f = date_filter(humidity_filtered, date1, date2)
     temp_f = date_filter(temp_filtered, date1, date2)
 
+    diameter_icon = 'https://dsm01pap006files.storage.live.com/y4m0WZgNK5hOL5p6Pxv65wY5mehxL3_wzXhhgW6S5bi625udGC9wtgqcfsbB9hCdIsbFp4k5IyqWPpF-jdzO8t4Ieb6_uVF0G7IAsBrs5-mNQNwug04O1KPJTXZolpjor1tGNi8LG-0T42j4AG6Ros0uow3WKNkL2HsNutjZLKhML3Fued-nCVuxG9XoBEYstVSpFN2zeQvL1RHzkfyG4KpOw?encodeFailures=1&width=802&height=801'
+    #st.markdown('---')
+    #st.markdown('## :herb: Diámetro del tallo')
+    # Resto de tu código
     st.markdown('---')
-    st.markdown('## :herb: Diámetro del tallo')
+    st.markdown(f'## <img class="icon" src="{diameter_icon}"> Diámetro del tallo', unsafe_allow_html=True)
     show_dashboard(df_f, df_media, key='Diametro', rango_semaforo=diameter_range, 
                    date1=date1, date2=date2)
     st.markdown('---')
  
     #st.markdown('## :battery: Voltaje de la batería y del panel solar')
-    custom_icon_path = './assets/icons/battery.png'  # Reemplaza con la ruta de tu ícono
-    st.markdown(f'<h2><img src="./assets/icons/battery.png" alt="Ícono personalizado" width="50" height="50"> Voltaje de la batería y del panel solar</h2>', unsafe_allow_html=True)
+    voltage_icon = 'https://dsm01pap006files.storage.live.com/y4m2uhXoUxFybxswWw41UdfrzJ5KKU0gnxG7b0R5ptetKut2AvnQQjtOmeu9NygdVYn5vjtFiSoVELVlVTG149hiaTOCC8GRjTC08CpozW5di8UQTp8ausqWIhxP7J6rJziI8_EiB_b0jBVH0cPHdkSRP9uDq9NdZ3cXe_Et_QacXrnW8QFKgT1ieBgdy97aJVIvZzgmwZPwhO9RPRZaHCiuA?encodeFailures=1&width=488&height=810'  # Reemplaza con la ruta de tu ícono
+    st.markdown(f'## <img class="icon" src="{voltage_icon}"> Voltaje de la batería y del panel solar', unsafe_allow_html=True)
     show_dashboard(voltage_f, voltage_mean, key='Voltaje', rango_semaforo=voltage_range,
                    date1=date1, date2=date2)
     st.markdown('---')
 
-    st.markdown('## :zap: Contenido iónico volumétrico en suelo')
+    #st.markdown('## :zap: Contenido iónico volumétrico en suelo')
+    vic_icon = 'https://dsm01pap006files.storage.live.com/y4mQiChhqFco_7phcEikijv_H6BqdTnVPMRgxJ02UZ8x9Or6j9pPIcpmVqOvTEUBX-GaDt8RsDr_EtrqsnXgeOnOWmpM80QVPZr1gr_W9D5FW7ddkTJLghU0i9DmF1QjHtK8AtkmibvUwaZ6SJhtyLE16vV3y_vtyBog4hC8ZOKhwS2DoIUER5hm3Sn3DYF6G2pUL1bB9M8725IAXZe6-tNHg?encodeFailures=1&width=602&height=603'
+    st.markdown(f'## <img class="icon" src="{vic_icon}"> Contenido iónico volumétrico en suelo', unsafe_allow_html=True)
     show_dashboard(ion_content_f, ion_content_mean, key='VIC', rango_semaforo=ion_content_range,
                    date1=date1, date2=date2)
     st.markdown('---')
 
-    st.markdown('## :droplet: Concentración de humedad en suelo')
+    humidity_icon = 'https://dsm01pap006files.storage.live.com/y4mnLNsaqguhsfFukAYV-2SPQLnyB28aCf6VpPM_Z038pg1v7SM3Q7mhpFbN4bE0PCflCrO75TPkuxFdgCfMysdttKww0rX-WjHZEI_iZsx9-hwEKWn6zExWhD6Up54nT2XsLYkeZQ1cEJMy7z4E-EtjGn1VwoC3Lijv9ysv7Jz3K7m6OmQey3YOUKBOui0WgPN3KGN4ARijUlLYWw4RDQuvQ?encodeFailures=1&width=598&height=800'
+    #st.markdown('## :droplet: Concentración de humedad en suelo')
+    st.markdown(f'## <img class="icon" src="{humidity_icon}"> Humedad en suelo', unsafe_allow_html=True)
     show_dashboard(humidity_f, humidity_mean, key='Humedad', rango_semaforo=humidity_range, 
                    date1=date1, date2=date2)
     st.markdown('---')
 
-    st.markdown('## :thermometer: Temperatura del suelo')
+    temp_icon = 'https://dsm01pap006files.storage.live.com/y4mrEz_57VGq_1bMMB0w9q78-uORaywcwBi4AOQuoZkoU7ee1Gqk5HLrRY0h_TrVJ3guBHB3ZswhQJufQp-KB4peBwjF7vo3ZPqnT9sh2wtL-Ii1FftzPJ3RbiDBoF7N_mRKJkvfhdC3ZbHYV4Hw0Tw0oo278NMAtB7JGVVErqr8VmBbmAPN0NJ6gzD9doAnpRol5Inr_0Hjau5G0N2rs5qRw?encodeFailures=1&width=439&height=810'
+    #st.markdown('## :thermometer: Temperatura del suelo')
+    st.markdown(f'## <img class="icon" src="{temp_icon}"> Temperatura en suelo', unsafe_allow_html=True)
     show_dashboard(temp_f, temp_mean, key='Temperatura', rango_semaforo=None,
                    date1=date1, date2=date2)
     st.markdown('---')
@@ -502,7 +515,8 @@ def page_analysis():
 # Definimos la página de 'Resumen'
 def page_summary():
     st.markdown(f'<h2> Resumen de estado de las medidas</h2>', unsafe_allow_html=True)
-    st.write("Esta es la página donde se muestra la media de las medidas obtenidas el último día de datos y el estado según los umbrales preestablecidos.")
+    st.markdown(f'<p style="color:#3C1A0B; font-family: "Barlow", sans-serif; font-weight: 600;"> Esta es la página donde se muestra la media de las medidas obtenidas el último día de datos y el estado según los umbrales preestablecidos.</p>', unsafe_allow_html=True)
+    #st.write("Esta es la página donde se muestra la media de las medidas obtenidas el último día de datos y el estado según los umbrales preestablecidos.")
     st.markdown('---')
     columnas = st.columns(3, gap="large")
     with columnas[0]:
