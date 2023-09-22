@@ -170,7 +170,7 @@ def semaforo(valor, rango=None):
 def indicador_metrica(valor, delta, unidad=''):
     
     # Color y flecha de la variación en función de su valor
-    color = 'green' if delta > 0 else 'red'
+    color = '#3F7E44' if delta > 0 else '#C73E01'
     flecha = '↑' if delta > 0 else '↓'
 
     # Formateamos los valores a mostrar
@@ -181,8 +181,86 @@ def indicador_metrica(valor, delta, unidad=''):
     st.markdown(
     f"""
     <style>
+    @font-face {{
+        font-family: 'Inter';
+        src: url('Inter-VariableFont_slnt,wght.ttf') format('opentype');
+        /* Reemplaza 'ruta/a/tu/fuente' con la ruta real de la fuente en tu proyecto */
+        font-weight: normal;
+        font-style: normal;
+    }}
+    .css-1629p8f h1{{
+        color:white;
+
+    }}
+    .css-vk3wp9 h1, p{{
+        color:black;
+    }}
+    .st-et {{
+        border-bottom-color: white;
+    }}
+
+    .st-es {{
+        border-top-color: white;
+    }}
+
+    .st-er {{
+        border-right-color: white;
+    }}
+
+
+    .st-eq {{
+        border-left-color: white;
+    }}
+    .css-6qob1r{{
+        background-color: #3F7E44;
+    }}
+    p, .label{{
+        
+        font-family: 'Inter', sans-serif;
+    }}
+
+    .st-hy::after  {{
+        background-color: #3F7E44;
+    }}
+    .st-h4::after  {{
+        background-color: #3F7E44;
+    }}
+    .st-hs::after  {{
+        border-color: #3F7E44;
+    }}
+    .st-gy::after {{
+        border-color: #3F7E44;
+    }}
+    .st-gx::after {{
+        border-color: #3F7E44;
+    }}
+    .st-gw::after {{
+        border-color: #3F7E44;
+    }}
+    .st-gv::after {{
+        border-color: #3F7E44;
+    }}
+    
+    
     .css-5rimss img{{
-        width:90%;
+        width:70%;
+    }}
+    .st-ev {{
+        background-color: rgb(240, 242, 246);
+        
+    }}
+
+    .st-ev p{{
+        color:rgb(60, 26, 11);
+    }}
+
+    .css-2n7b7j {{
+        display: flex;
+        -webkit-box-align: center;
+        align-items: center;
+        padding-top: 0px;
+        padding-bottom: 0px;
+        background: #3F7E44;
     }}
     img.icon {{
         max-width: 60px;
@@ -204,6 +282,11 @@ def indicador_metrica(valor, delta, unidad=''):
     .st-dw {{
         background-color: rgb(225 241 229);
     }}
+
+    .st-dv {{
+        background-color: rgb(225 241 229);
+    }}
+    
     .st-dl {{
         background-color: #3C1A0B;
     }}
@@ -389,12 +472,12 @@ def selectbox_freq_marcadores(key):
     return freq, marcador
 
 # Objeto expandible que permite descargar los datos que se muestran en el gráfico de líneas
-def download_data_expander(data, name):
-    with st.expander("Datos"):
-        # st.write(data.style.background_gradient(cmap='Blues'))
-        csv = data.to_csv(index=False).encode('utf-8')
-        elemento = st.download_button("Descarga", data=csv, file_name=name, mime="text/csv",
-                           help='Click here to download the data as a CSV file')
+#def download_data_expander(data, name):
+#    with st.expander("Datos"):
+#        # st.write(data.style.background_gradient(cmap='Blues'))
+#        csv = data.to_csv(index=False).encode('utf-8')
+#        elemento = st.download_button("Descarga", data=csv, file_name=name, mime="text/csv",
+#                           help='Click here to download the data as a CSV file')
 
 # Dashboard de una medida que reune todos los elementos visuales anteriores
 # Esta función se utilizará particularmente en la página de 'Visualización'
@@ -421,8 +504,8 @@ def show_dashboard(df_filtered, df_media, date1, date2, key, rango_semaforo=None
             linechart = grafico_linea(df_filtered, freq, marcador, date1, date2, text=key)
 
         # Añadimos el expandible con botón de descarga de los datos de la gráfica
-        with columna2:
-            download_data_expander(linechart, 'data.csv')
+        #with columna2:
+            #download_data_expander(linechart, 'data.csv')
 
 # Resumen segun los dos indicadores anteriores de una medida
 # Esta función se utilizará particularmente en la página de 'Resumen'
@@ -486,7 +569,7 @@ def page_analysis():
  
     #st.markdown('## :battery: Voltaje de la batería y del panel solar')
     voltage_icon = 'https://dsm01pap006files.storage.live.com/y4m2uhXoUxFybxswWw41UdfrzJ5KKU0gnxG7b0R5ptetKut2AvnQQjtOmeu9NygdVYn5vjtFiSoVELVlVTG149hiaTOCC8GRjTC08CpozW5di8UQTp8ausqWIhxP7J6rJziI8_EiB_b0jBVH0cPHdkSRP9uDq9NdZ3cXe_Et_QacXrnW8QFKgT1ieBgdy97aJVIvZzgmwZPwhO9RPRZaHCiuA?encodeFailures=1&width=488&height=810'  # Reemplaza con la ruta de tu ícono
-    st.markdown(f'## <img class="icon" src="{voltage_icon}"> Voltaje de la batería y del panel solar', unsafe_allow_html=True)
+    st.markdown(f'## <img class="icon" style="width:30px;" src="{voltage_icon}"> Voltaje de la batería y del panel solar', unsafe_allow_html=True)
     show_dashboard(voltage_f, voltage_mean, key='Voltaje', rango_semaforo=voltage_range,
                    date1=date1, date2=date2)
     st.markdown('---')
@@ -500,14 +583,14 @@ def page_analysis():
 
     humidity_icon = 'https://dsm01pap006files.storage.live.com/y4mnLNsaqguhsfFukAYV-2SPQLnyB28aCf6VpPM_Z038pg1v7SM3Q7mhpFbN4bE0PCflCrO75TPkuxFdgCfMysdttKww0rX-WjHZEI_iZsx9-hwEKWn6zExWhD6Up54nT2XsLYkeZQ1cEJMy7z4E-EtjGn1VwoC3Lijv9ysv7Jz3K7m6OmQey3YOUKBOui0WgPN3KGN4ARijUlLYWw4RDQuvQ?encodeFailures=1&width=598&height=800'
     #st.markdown('## :droplet: Concentración de humedad en suelo')
-    st.markdown(f'## <img class="icon" src="{humidity_icon}"> Humedad en suelo', unsafe_allow_html=True)
+    st.markdown(f'## <img class="icon" style="width:40px;" src="{humidity_icon}"> Humedad en suelo', unsafe_allow_html=True)
     show_dashboard(humidity_f, humidity_mean, key='Humedad', rango_semaforo=humidity_range, 
                    date1=date1, date2=date2)
     st.markdown('---')
 
     temp_icon = 'https://dsm01pap006files.storage.live.com/y4mrEz_57VGq_1bMMB0w9q78-uORaywcwBi4AOQuoZkoU7ee1Gqk5HLrRY0h_TrVJ3guBHB3ZswhQJufQp-KB4peBwjF7vo3ZPqnT9sh2wtL-Ii1FftzPJ3RbiDBoF7N_mRKJkvfhdC3ZbHYV4Hw0Tw0oo278NMAtB7JGVVErqr8VmBbmAPN0NJ6gzD9doAnpRol5Inr_0Hjau5G0N2rs5qRw?encodeFailures=1&width=439&height=810'
     #st.markdown('## :thermometer: Temperatura del suelo')
-    st.markdown(f'## <img class="icon" src="{temp_icon}"> Temperatura en suelo', unsafe_allow_html=True)
+    st.markdown(f'## <img class="icon" style="width:30px;" src="{temp_icon}"> Temperatura en suelo', unsafe_allow_html=True)
     show_dashboard(temp_f, temp_mean, key='Temperatura', rango_semaforo=None,
                    date1=date1, date2=date2)
     st.markdown('---')
@@ -537,8 +620,8 @@ def page_summary():
 # Cabe notar que por defecto la primera en mostrarse es la primera definida en el diccionario
 st.sidebar.title("Navegación")
 pages = {
-    "📊 Resumen": page_summary,
-    "📉 Visualización": page_analysis 
+    "Resumen": page_summary,
+    "Visualización": page_analysis 
 }
 
 # Seleccionamos una página en una lista de selección en el sidebar
