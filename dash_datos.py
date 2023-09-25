@@ -23,7 +23,7 @@ gemini_icon = 'https://dsm01pap006files.storage.live.com/y4m3V8LKKeJnD1a0AxWuavo
 # Título de la pestaña de la app web
 st.set_page_config(page_title='GEMINIODS13', page_icon=gemini_icon, layout='wide')
 
-header_image = 'https://dsm01pap006files.storage.live.com/y4mP2gmZr6e3P0-UIlDQkSWxOBBzeDFyHKJOKRalck8vr2OrkxyPy7TPboIrDAB2NkrNprvVEW73ZAmh-dixjC2ECMN6QV8a5OPsWeCmkb8O79Znluw8X30M57KxEu1CDrr_9IUyhw7xhdcjVpyl4I0rufOR0Zj1KvxSA07a2V-LHPDraYw9frSmubF760NSiAHlEz5AZwHwTZvtCCUZos9UA?encodeFailures=1&width=1920&height=552'
+header_image = 'https://dsm01pap006files.storage.live.com/y4m0rkiAn-_tlR9B8UAnUY2G7_Y1n1gURUBI5UhLdSEDeDUiZFuu_ra_6LYnimihnuBGDLWqxLfs6Qo6VwA0MBiBYrGh_3cbH86N3FdP0c0Qi8Nf_GqwVlfdGRp7nTvndb09bOXmdjJn_mrTsNY40NvK0-7bGwfJAdOjMUzwNeuJeH_sNOfI0kiqS5FmPSabSIeYvRVKZKuuPFPcROwo-7TJg?encodeFailures=1&width=1920&height=633'
 st.markdown(f'<img src="{header_image}">', unsafe_allow_html=True)
 
 # Título general común a todas las páginas
@@ -181,12 +181,18 @@ def indicador_metrica(valor, delta, unidad=''):
     st.markdown(
     f"""
     <style>
+    .css-5rimss p{{
+        
+    }}
     @font-face {{
         font-family: 'Inter';
         src: url('Inter-VariableFont_slnt,wght.ttf') format('opentype');
         /* Reemplaza 'ruta/a/tu/fuente' con la ruta real de la fuente en tu proyecto */
         font-weight: normal;
         font-style: normal;
+    }}
+    #bui155val-0 {{
+        color: red; /* Cambia el color a tu preferencia */
     }}
     .css-1629p8f h1{{
         color:white;
@@ -241,9 +247,13 @@ def indicador_metrica(valor, delta, unidad=''):
         border-color: #3F7E44;
     }}
     
-    
+
     .css-5rimss img{{
-        width:70%;
+        width:60%;
+        margin-left: -1.3rem;
+    }}
+    stMarkdownContainer{{
+        
     }}
     .st-ev {{
         background-color: rgb(240, 242, 246);
@@ -563,13 +573,13 @@ def page_analysis():
     # Resto de tu código
     st.markdown('---')
     st.markdown(f'## <img class="icon" src="{diameter_icon}"> Diámetro del tallo', unsafe_allow_html=True)
-    show_dashboard(df_f, df_media, key='Diametro', rango_semaforo=diameter_range, 
+    show_dashboard(df_f, df_media, key='Diámetro', rango_semaforo=diameter_range, 
                    date1=date1, date2=date2)
     st.markdown('---')
  
     #st.markdown('## :battery: Voltaje de la batería y del panel solar')
     voltage_icon = 'https://dsm01pap006files.storage.live.com/y4m2uhXoUxFybxswWw41UdfrzJ5KKU0gnxG7b0R5ptetKut2AvnQQjtOmeu9NygdVYn5vjtFiSoVELVlVTG149hiaTOCC8GRjTC08CpozW5di8UQTp8ausqWIhxP7J6rJziI8_EiB_b0jBVH0cPHdkSRP9uDq9NdZ3cXe_Et_QacXrnW8QFKgT1ieBgdy97aJVIvZzgmwZPwhO9RPRZaHCiuA?encodeFailures=1&width=488&height=810'  # Reemplaza con la ruta de tu ícono
-    st.markdown(f'## <img class="icon" style="width:30px;" src="{voltage_icon}"> Voltaje de la batería y del panel solar', unsafe_allow_html=True)
+    st.markdown(f'## <img class="icon" style="width:40px;" src="{voltage_icon}"> Voltaje de la batería y del panel solar', unsafe_allow_html=True)
     show_dashboard(voltage_f, voltage_mean, key='Voltaje', rango_semaforo=voltage_range,
                    date1=date1, date2=date2)
     st.markdown('---')
@@ -613,8 +623,8 @@ def page_summary():
         show_summary(humidity_mean, nombre='Humedad', rango_semaforo=humidity_range)
     with columnas[1]:
         show_summary(temp_mean, nombre='Temperatura', rango_semaforo=None)
-    with columnas[2]:
-        show_summary(temp_mean, nombre='Temperatura', rango_semaforo=None)
+    #with columnas[2]:
+    #    show_summary(temp_mean, nombre='Temperatura', rango_semaforo=None)
 
 # Configuramos la navegacción por páginas el sidebar
 # Cabe notar que por defecto la primera en mostrarse es la primera definida en el diccionario
