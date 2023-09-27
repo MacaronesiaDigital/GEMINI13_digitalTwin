@@ -16,12 +16,23 @@ import warnings
 from datetime import timedelta
 warnings.filterwarnings('ignore')
 
+import psycopg2
+
+# Conéctate a la base de datos PostgreSQL
+conn = psycopg2.connect(
+    database="postgres",
+    user="postgres",
+    password="Poppabull-1",
+    host="localhost",  # Cambia esto si tu base de datos está en un servidor remoto
+    port="5432"  # Cambia esto si el puerto de tu base de datos es diferente
+)
 
 # PASO 2.- CONFIGURAMOS EL INICIO DE LA WEB
 # ------------------------------------------
 gemini_icon = 'https://dsm01pap006files.storage.live.com/y4m3V8LKKeJnD1a0AxWuavohyGInpEWlBwM9566v8gNlx-RN4_yOWlh_68BxT4vkCUstW03fmOoq9jBq-wML_0Awh_91SukCAvnfCesAtnzOp8mp5SALfWGPXqFxfb2_Fmf90tsXoNw4ZbI6XECVcmi2Q5QIfKMd9PczrYgx3qPjuc19_FF4dEbzWfpX9v4EAUbL0YKD1U-1nU0CXQA0RxHWg?encodeFailures=1&width=500&height=500'
 # Título de la pestaña de la app web
 st.set_page_config(page_title='GEMINIODS13', page_icon=gemini_icon, layout='wide')
+
 
 header_image = 'https://dsm01pap006files.storage.live.com/y4m0rkiAn-_tlR9B8UAnUY2G7_Y1n1gURUBI5UhLdSEDeDUiZFuu_ra_6LYnimihnuBGDLWqxLfs6Qo6VwA0MBiBYrGh_3cbH86N3FdP0c0Qi8Nf_GqwVlfdGRp7nTvndb09bOXmdjJn_mrTsNY40NvK0-7bGwfJAdOjMUzwNeuJeH_sNOfI0kiqS5FmPSabSIeYvRVKZKuuPFPcROwo-7TJg?encodeFailures=1&width=1920&height=633'
 st.markdown(f'<img src="{header_image}">', unsafe_allow_html=True)
@@ -43,23 +54,41 @@ st.markdown('<style>div.block-container{padding-top:2rem;}</style',
 ruta = r'C:\Users\eci\project\GEMINI13_digitalTwin\assets\csv'
 os.chdir(ruta)
 
+
+# Cierra la conexión a la base de datos
+#conn.close()
+
 # Datos de diámetro del tall
+consulta_sql = "SELECT * FROM base, reg_sensor_21 as tipo WHERE tipo.sensor = base.sensor_id ORDER BY sensor_id, registered_date;"
 df = pd.read_csv("diametro.csv")
+#df = pd.read_sql_query(consulta_sql, conn)
+
+# Ejecuta la consulta SQL y carga los datos en un DataFrame de pandas
+
 
 # Datos de contenido ióndico volumétrico
+consulta_sql_ion = "SELECT *  	FROM base, reg_sensor_15 as tipo 	WHERE tipo.sensor = base.sensor_id UNION SELECT * 	FROM base, reg_sensor_16 as tipo 	WHERE tipo.sensor = base.sensor_id UNION SELECT * 	FROM base, reg_sensor_17 as tipo 	WHERE tipo.sensor = base.sensor_id UNION SELECT * 	FROM base, reg_sensor_18 as tipo 	WHERE tipo.sensor = base.sensor_id UNION SELECT * 	FROM base, reg_sensor_19 as tipo 	WHERE tipo.sensor = base.sensor_id UNION SELECT * 	FROM base, reg_sensor_20 as tipo 	WHERE tipo.sensor = base.sensor_id ORDER BY sensor_id, registered_date;"
 ion_content_df = pd.read_csv("ion_content.csv")
+#ion_content_df = pd.read_sql_query(consulta_sql_ion, conn)
 ion_content_df['type_name'] = ion_content_df['type_name'].replace('Volumetric Ionic Content', 'VIC', regex=True)
 
 # Datos de voltaje
+consulta_sql_vol = "SELECT * 	FROM base, reg_sensor_1 as tipo 	WHERE tipo.sensor = base.sensor_id UNION SELECT * 	FROM base, reg_sensor_2 as tipo 	WHERE tipo.sensor = base.sensor_id ORDER BY sensor_id, registered_date;"
 voltage_df = pd.read_csv("voltage.csv")
+#voltage_df = pd.read_sql_query(consulta_sql_vol, conn)
 voltage_df['average'] = voltage_df['value']
 
 # Datos de humedad en suelo
+consulta_sql_hum ="SELECT * 	FROM base, reg_sensor_9 as tipo 	WHERE tipo.sensor = base.sensor_id UNION SELECT * 	FROM base, reg_sensor_10 as tipo 	WHERE tipo.sensor = base.sensor_id UNION SELECT * 	FROM base, reg_sensor_11 as tipo 	WHERE tipo.sensor = base.sensor_id UNION SELECT * 	FROM base, reg_sensor_12 as tipo 	WHERE tipo.sensor = base.sensor_id UNION SELECT * 	FROM base, reg_sensor_13 as tipo 	WHERE tipo.sensor = base.sensor_id UNION SELECT * 	FROM base, reg_sensor_14 as tipo 	WHERE tipo.sensor = base.sensor_id ORDER BY sensor_id, registered_date;"
 humidity_df = pd.read_csv("humidity.csv")
+#humidity_df = pd.read_sql_query(consulta_sql_hum, conn)
 humidity_df['type_name'] = humidity_df['type_name'].replace('Soil moisture ', '', regex=True)
 
+
 # Datos de temperatura del suelo
+consulta_sql_temp ="SELECT * FROM base, reg_sensor_3 as tipo WHERE tipo.sensor = base.sensor_id UNION SELECT * FROM base, reg_sensor_4 as tipo WHERE tipo.sensor = base.sensor_id UNION SELECT * FROM base, reg_sensor_5 as tipo WHERE tipo.sensor = base.sensor_id UNION SELECT * FROM base, reg_sensor_6 as tipo WHERE tipo.sensor = base.sensor_id UNION SELECT * FROM base, reg_sensor_7 as tipo WHERE tipo.sensor = base.sensor_id UNION SELECT * FROM base, reg_sensor_8 as tipo WHERE tipo.sensor = base.sensor_id ORDER BY sensor_id, registered_date;"
 temp_df = pd.read_csv("temperature.csv")
+#temp_df = pd.read_sql_query(consulta_sql_temp, conn)
 temp_df['type_name'] = temp_df['type_name'].replace('Soil temperature', 'Sensor', regex=True)
 
 
@@ -249,8 +278,14 @@ def indicador_metrica(valor, delta, unidad=''):
     
 
     .css-5rimss img{{
-        width:60%;
+        width:70%;
         margin-left: -1.3rem;
+    }}
+    @media (max-width: 600px) {{
+        .css-5rimss img {{
+            width: 100%;
+            margin-left: -0.5rem;
+        }}
     }}
     stMarkdownContainer{{
         
@@ -641,3 +676,5 @@ selected_page = st.sidebar.radio("Selecciona una página", tuple(pages.keys()))
 
 # Mostramos el contenido de la página seleccionada
 pages[selected_page]()
+
+conn.close()
