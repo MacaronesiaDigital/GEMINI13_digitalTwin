@@ -15,17 +15,15 @@ import os
 import warnings
 from datetime import timedelta
 warnings.filterwarnings('ignore')
-
-import psycopg2
-
-# Conéctate a la base de datos PostgreSQL
-conn = psycopg2.connect(
-    database="postgres",
-    user="postgres",
-    password="Poppabull-1",
-    host="localhost",  # Cambia esto si tu base de datos está en un servidor remoto
-    port="5432"  # Cambia esto si el puerto de tu base de datos es diferente
-)
+#import psycopg2
+## Conéctate a la base de datos PostgreSQL
+#conn = psycopg2.connect(
+#    database="postgres",
+#    user="postgres",
+#    password="Poppabull-1",
+#    host="localhost",  # Cambia esto si tu base de datos está en un servidor remoto
+#    port="5432"  # Cambia esto si el puerto de tu base de datos es diferente
+#)
 
 # PASO 2.- CONFIGURAMOS EL INICIO DE LA WEB
 # ------------------------------------------
