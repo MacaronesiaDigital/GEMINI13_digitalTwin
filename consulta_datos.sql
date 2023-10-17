@@ -6,27 +6,22 @@
 */
 
 -- Creamos la vista base de donde vamos a sacar los datos
-CREATE VIEW base AS
+CREATE TEMPORARY VIEW base AS
 SELECT sensor.id AS sensor_id, sensor.name AS type_name, sensor.type, station.name AS station_name, sensor.provider
 	FROM farm, station, sensor, public.owner
 	where farm.id = station.farm
 	and sensor.station = station.id
 	and public.owner.id = farm.owner
 	and (public.owner.name = 'Domingo' or public.owner.name = 'Blas')
-	and sensor.provider = 'Metos';
-
-SELECT *
-	FROM base
-	
-DROP VIEW ion_content, temperature, diameter, humidity, voltage
-DROP VIEW base
+	and sensor.provider = 'Metos'
 
 /*
  Creamos la vista con el contenido iónico volumétrico
  Como todas las tablas que contienen esta medida tienen las mismas columnas,
  las unimos para obtener toda la información en una sola vista.
 */
-CREATE VIEW ion_content AS
+
+CREATE TEMPORARY VIEW ion_content AS
 SELECT *
 	FROM base, reg_sensor_15 as tipo
 	WHERE tipo.sensor = base.sensor_id
@@ -50,25 +45,19 @@ UNION
 SELECT *
 	FROM base, reg_sensor_20 as tipo
 	WHERE tipo.sensor = base.sensor_id
-ORDER BY sensor_id, registered_date;
-
-SELECT *
-	FROM ion_content
+ORDER BY sensor_id, registered_date
 
 
 -- Creamos la vista del diámetro obtenido por los dendrómetros
-CREATE VIEW diameter AS 
+CREATE TEMPORARY VIEW diameter AS 
 SELECT *
 	FROM base, reg_sensor_21 as tipo
 	WHERE tipo.sensor = base.sensor_id
-ORDER BY sensor_id, registered_date;
-
-SELECT *
-	FROM diameter
+ORDER BY sensor_id, registered_date
 
 
 -- Creamos vista del panel solar y la bateria
-CREATE VIEW voltage AS
+CREATE TEMPORARY VIEW voltage AS
 SELECT *
 	FROM base, reg_sensor_1 as tipo
 	WHERE tipo.sensor = base.sensor_id
@@ -76,17 +65,14 @@ UNION
 SELECT *
 	FROM base, reg_sensor_2 as tipo
 	WHERE tipo.sensor = base.sensor_id
-ORDER BY sensor_id, registered_date;
-
-SELECT *
-	FROM voltage
+ORDER BY sensor_id, registered_date
 
 /*
  Creamos la vista con el contenido de humedad en suelo
  tienen las mismas columnas, las unimos para obtener 
  toda la información en una sola vista.
 */
-CREATE VIEW humidity AS
+CREATE TEMPORARY VIEW humidity AS
 SELECT *
 	FROM base, reg_sensor_9 as tipo
 	WHERE tipo.sensor = base.sensor_id
@@ -110,16 +96,14 @@ UNION
 SELECT *
 	FROM base, reg_sensor_14 as tipo
 	WHERE tipo.sensor = base.sensor_id
-ORDER BY sensor_id, registered_date;
+ORDER BY sensor_id, registered_date
 
-SELECT *
-	FROM humidity
 /*
  Creamos la vista con la temperatura del suelo
  tienen las mismas columnas, las unimos para obtener 
  toda la información en una sola vista.
 */
-CREATE VIEW temperature AS
+CREATE TEMPORARY VIEW temperature AS
 SELECT *
 	FROM base, reg_sensor_3 as tipo
 	WHERE tipo.sensor = base.sensor_id
@@ -143,7 +127,19 @@ UNION
 SELECT *
 	FROM base, reg_sensor_8 as tipo
 	WHERE tipo.sensor = base.sensor_id
-ORDER BY sensor_id, registered_date;
-	
+ORDER BY sensor_id, registered_date
+
+SELECT *
+	FROM humidity
+
 SELECT *
 	FROM temperature
+
+SELECT *
+	FROM diameter
+
+SELECT *
+	FROM ion_content
+
+SELECT * 
+	FROM voltage

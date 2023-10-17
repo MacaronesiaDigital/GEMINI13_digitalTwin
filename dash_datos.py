@@ -15,6 +15,7 @@ import os
 import warnings
 from datetime import timedelta
 warnings.filterwarnings('ignore')
+import datetime
 #import psycopg2
 ## Conéctate a la base de datos PostgreSQL
 #conn = psycopg2.connect(
@@ -49,7 +50,7 @@ st.markdown('<style>div.block-container{padding-top:2rem;}</style',
 
 
 # Elegimos como directorio de trabajo aquel donde se encuentren los datos
-ruta = r'C:\Users\eci\project\GEMINI13_digitalTwin\assets\csv'
+ruta = r'C:\Users\eci\GEMINI13_digitalTwin\assets\csv'
 os.chdir(ruta)
 
 
@@ -276,7 +277,7 @@ def indicador_metrica(valor, delta, unidad=''):
     
 
     .css-5rimss img{{
-        width:70%;
+        width:30%;
         margin-left: -1.3rem;
     }}
     @media (max-width: 600px) {{
@@ -572,6 +573,9 @@ def show_summary(df_mean, nombre='Medida', rango_semaforo=None):
 # Guardamos las fechas en la que están comprendidos los datos
 startDate = df['registered_date'].min()
 endDate = df['registered_date'].max() 
+print(endDate)
+endDate = datetime.date(2023, 10, 9)
+print(endDate)
 # Por defecto, pretendemos mostrar los gráficos desde un rango temporal de 4 días antes a la fecha actual
 startDate_def = endDate -timedelta(days=4)
 
@@ -675,4 +679,4 @@ selected_page = st.sidebar.radio("Selecciona una página", tuple(pages.keys()))
 # Mostramos el contenido de la página seleccionada
 pages[selected_page]()
 
-conn.close()
+#conn.close()
