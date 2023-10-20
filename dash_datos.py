@@ -50,9 +50,9 @@ st.markdown('<style>div.block-container{padding-top:2rem;}</style',
 
 
 # Elegimos como directorio de trabajo aquel donde se encuentren los datos
+#ruta = r'C:\Users\eci\GEMINI13_digitalTwin\assets\csv'
 ruta = r'C:\Users\eci\GEMINI13_digitalTwin\assets\csv'
 os.chdir(ruta)
-
 
 # Cierra la conexión a la base de datos
 #conn.close()
@@ -63,7 +63,6 @@ df = pd.read_csv("diametro.csv")
 #df = pd.read_sql_query(consulta_sql, conn)
 
 # Ejecuta la consulta SQL y carga los datos en un DataFrame de pandas
-
 
 # Datos de contenido ióndico volumétrico
 consulta_sql_ion = "SELECT *  	FROM base, reg_sensor_15 as tipo 	WHERE tipo.sensor = base.sensor_id UNION SELECT * 	FROM base, reg_sensor_16 as tipo 	WHERE tipo.sensor = base.sensor_id UNION SELECT * 	FROM base, reg_sensor_17 as tipo 	WHERE tipo.sensor = base.sensor_id UNION SELECT * 	FROM base, reg_sensor_18 as tipo 	WHERE tipo.sensor = base.sensor_id UNION SELECT * 	FROM base, reg_sensor_19 as tipo 	WHERE tipo.sensor = base.sensor_id UNION SELECT * 	FROM base, reg_sensor_20 as tipo 	WHERE tipo.sensor = base.sensor_id ORDER BY sensor_id, registered_date;"
@@ -117,21 +116,22 @@ def apply_filters(data_frame, column_name, filter_values):
 # Añadimos la selección de filtros en la barra lateral
 st.sidebar.title("Elige un filtro")
 
-# Filtramos los datos según la estación a través de una caja de selección
-station = st.sidebar.selectbox("Elige una estación", df["station_name"].unique())
-df_filtered = apply_filters(df, "station_name", station)
-ion_content_filtered = apply_filters(ion_content_df, "station_name", station)
-voltage_filtered = apply_filters(voltage_df, "station_name", station)
-humidity_filtered = apply_filters(humidity_df, "station_name", station)
-temp_filtered = apply_filters(temp_df, "station_name", station)
-
 # Filtramos los datos según el proveedor a través de una caja de selección
 provider = st.sidebar.selectbox("Elige un proveedor", df["provider"].unique())
-df_filtered = apply_filters(df_filtered, "provider", provider)
-ion_content_filtered = apply_filters(ion_content_filtered, "provider", provider)
-voltage_filtered = apply_filters(voltage_filtered, "provider", provider)
-humidity_filtered = apply_filters(humidity_filtered, "provider", provider)
-temp_filtered = apply_filters(temp_filtered, "provider", provider)
+df_filtered = apply_filters(df, "provider", provider)
+ion_content_filtered = apply_filters(ion_content_df, "provider", provider)
+voltage_filtered = apply_filters(voltage_df, "provider", provider)
+humidity_filtered = apply_filters(humidity_df, "provider", provider)
+temp_filtered = apply_filters(temp_df, "provider", provider)
+
+# Filtramos los datos según la estación a través de una caja de selección
+station = st.sidebar.selectbox("Elige una estación", df_filtered["station_name"].unique())
+df_filtered = apply_filters(df_filtered, "station_name", station)
+ion_content_filtered = apply_filters(ion_content_filtered, "station_name", station)
+voltage_filtered = apply_filters(voltage_filtered, "station_name", station)
+humidity_filtered = apply_filters(humidity_filtered, "station_name", station)
+temp_filtered = apply_filters(temp_filtered, "station_name", station)
+
 
 # Después de aplicar todos los filtros salvo el de fecha guardamos el resultado en una variable
 # Este dataframe nos servirá más adelante para calcular el estado actual de una medida
@@ -573,9 +573,7 @@ def show_summary(df_mean, nombre='Medida', rango_semaforo=None):
 # Guardamos las fechas en la que están comprendidos los datos
 startDate = df['registered_date'].min()
 endDate = df['registered_date'].max() 
-print(endDate)
 endDate = datetime.date(2023, 10, 9)
-print(endDate)
 # Por defecto, pretendemos mostrar los gráficos desde un rango temporal de 4 días antes a la fecha actual
 startDate_def = endDate -timedelta(days=4)
 
