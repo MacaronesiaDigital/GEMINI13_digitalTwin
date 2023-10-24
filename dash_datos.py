@@ -16,15 +16,16 @@ import warnings
 from datetime import timedelta
 warnings.filterwarnings('ignore')
 import datetime
-#import psycopg2
-## Conéctate a la base de datos PostgreSQL
-#conn = psycopg2.connect(
-#    database="postgres",
-#    user="postgres",
-#    password="Poppabull-1",
-#    host="localhost",  # Cambia esto si tu base de datos está en un servidor remoto
-#    port="5432"  # Cambia esto si el puerto de tu base de datos es diferente
-#)
+import psycopg2
+# Conéctate a la base de datos PostgreSQL
+conn = psycopg2.connect(
+    database="postgres",
+    user="gemini13",
+    password="MDPonny!",
+    host="localhost",  # Cambia esto si tu base de datos está en un servidor remoto
+    port="5432"  # Cambia esto si el puerto de tu base de datos es diferente
+)
+print(conn)
 
 # PASO 2.- CONFIGURAMOS EL INICIO DE LA WEB
 # ------------------------------------------
@@ -53,40 +54,153 @@ st.markdown('<style>div.block-container{padding-top:2rem;}</style',
 #ruta = r'C:\Users\eci\GEMINI13_digitalTwin\assets\csv'
 ruta = r'C:\Users\eci\GEMINI13_digitalTwin\assets\csv'
 os.chdir(ruta)
+cursor = conn.cursor()
+create_views_sql = """
+CREATE TEMPORARY VIEW base AS
+SELECT sensor.id AS sensor_id, sensor.name AS type_name, sensor.type, station.name AS station_name, sensor.provider
+    FROM farm, station, sensor, public.owner
+    where farm.id = station.farm
+    and sensor.station = station.id
+    and public.owner.id = farm.owner
+    and (public.owner.name = 'Domingo' or public.owner.name = 'Blas')
+    and (sensor.provider = 'Ecomatik' or sensor.provider = 'Metos');
+
+CREATE TEMPORARY VIEW ion_content AS
+SELECT *
+	FROM base, reg_sensor_15 as tipo
+	WHERE tipo.sensor = base.sensor_id
+UNION
+SELECT *
+	FROM base, reg_sensor_16 as tipo
+	WHERE tipo.sensor = base.sensor_id
+UNION
+SELECT *
+	FROM base, reg_sensor_17 as tipo
+	WHERE tipo.sensor = base.sensor_id
+UNION
+SELECT *
+	FROM base, reg_sensor_18 as tipo
+	WHERE tipo.sensor = base.sensor_id
+UNION
+SELECT *
+	FROM base, reg_sensor_19 as tipo
+	WHERE tipo.sensor = base.sensor_id
+UNION
+SELECT *
+	FROM base, reg_sensor_20 as tipo
+	WHERE tipo.sensor = base.sensor_id
+ORDER BY sensor_id, registered_date;
+
+CREATE TEMPORARY VIEW diameter AS 
+SELECT sensor_id, type_name, station_name, provider, registered_date, average, unit
+    FROM base, reg_sensor_21 as tipo
+    WHERE tipo.sensor = base.sensor_id
+UNION
+SELECT sensor_id, type_name, station_name, provider, registered_date, tipo.value as average, unit
+    FROM base, reg_sensor_22 as tipo
+    WHERE tipo.sensor = base.sensor_id
+ORDER BY sensor_id, registered_date;
+
+CREATE TEMPORARY VIEW voltage AS
+SELECT *
+	FROM base, reg_sensor_1 as tipo
+	WHERE tipo.sensor = base.sensor_id
+UNION
+SELECT *
+	FROM base, reg_sensor_2 as tipo
+	WHERE tipo.sensor = base.sensor_id
+ORDER BY sensor_id, registered_date;
+
+CREATE TEMPORARY VIEW humidity AS
+SELECT *
+	FROM base, reg_sensor_9 as tipo
+	WHERE tipo.sensor = base.sensor_id
+UNION
+SELECT *
+	FROM base, reg_sensor_10 as tipo
+	WHERE tipo.sensor = base.sensor_id
+UNION
+SELECT *
+	FROM base, reg_sensor_11 as tipo
+	WHERE tipo.sensor = base.sensor_id
+UNION
+SELECT *
+	FROM base, reg_sensor_12 as tipo
+	WHERE tipo.sensor = base.sensor_id
+UNION
+SELECT *
+	FROM base, reg_sensor_13 as tipo
+	WHERE tipo.sensor = base.sensor_id
+UNION
+SELECT *
+	FROM base, reg_sensor_14 as tipo
+	WHERE tipo.sensor = base.sensor_id
+ORDER BY sensor_id, registered_date;
+
+CREATE TEMPORARY VIEW temperature AS
+SELECT *
+	FROM base, reg_sensor_3 as tipo
+	WHERE tipo.sensor = base.sensor_id
+UNION
+SELECT *
+	FROM base, reg_sensor_4 as tipo
+	WHERE tipo.sensor = base.sensor_id
+UNION
+SELECT *
+	FROM base, reg_sensor_5 as tipo
+	WHERE tipo.sensor = base.sensor_id
+UNION
+SELECT *
+	FROM base, reg_sensor_6 as tipo
+	WHERE tipo.sensor = base.sensor_id
+UNION
+SELECT *
+	FROM base, reg_sensor_7 as tipo
+	WHERE tipo.sensor = base.sensor_id
+UNION
+SELECT *
+	FROM base, reg_sensor_8 as tipo
+	WHERE tipo.sensor = base.sensor_id
+ORDER BY sensor_id, registered_date;
+"""
+
+# Ejecuta la consulta SQL para crear todas las vistas temporales
+cursor.execute(create_views_sql)
+
 
 # Cierra la conexión a la base de datos
 #conn.close()
 
 # Datos de diámetro del tall
 consulta_sql = "SELECT * FROM base, reg_sensor_21 as tipo WHERE tipo.sensor = base.sensor_id ORDER BY sensor_id, registered_date;"
-df = pd.read_csv("diametro.csv")
-#df = pd.read_sql_query(consulta_sql, conn)
+#df = pd.read_csv("diametro.csv")
+df = pd.read_sql_query(consulta_sql, conn)
 
 # Ejecuta la consulta SQL y carga los datos en un DataFrame de pandas
 
 # Datos de contenido ióndico volumétrico
 consulta_sql_ion = "SELECT *  	FROM base, reg_sensor_15 as tipo 	WHERE tipo.sensor = base.sensor_id UNION SELECT * 	FROM base, reg_sensor_16 as tipo 	WHERE tipo.sensor = base.sensor_id UNION SELECT * 	FROM base, reg_sensor_17 as tipo 	WHERE tipo.sensor = base.sensor_id UNION SELECT * 	FROM base, reg_sensor_18 as tipo 	WHERE tipo.sensor = base.sensor_id UNION SELECT * 	FROM base, reg_sensor_19 as tipo 	WHERE tipo.sensor = base.sensor_id UNION SELECT * 	FROM base, reg_sensor_20 as tipo 	WHERE tipo.sensor = base.sensor_id ORDER BY sensor_id, registered_date;"
-ion_content_df = pd.read_csv("ion_content.csv")
-#ion_content_df = pd.read_sql_query(consulta_sql_ion, conn)
+#ion_content_df = pd.read_csv("ion_content.csv")
+ion_content_df = pd.read_sql_query(consulta_sql_ion, conn)
 ion_content_df['type_name'] = ion_content_df['type_name'].replace('Volumetric Ionic Content', 'VIC', regex=True)
 
 # Datos de voltaje
 consulta_sql_vol = "SELECT * 	FROM base, reg_sensor_1 as tipo 	WHERE tipo.sensor = base.sensor_id UNION SELECT * 	FROM base, reg_sensor_2 as tipo 	WHERE tipo.sensor = base.sensor_id ORDER BY sensor_id, registered_date;"
 voltage_df = pd.read_csv("voltage.csv")
-#voltage_df = pd.read_sql_query(consulta_sql_vol, conn)
+voltage_df = pd.read_sql_query(consulta_sql_vol, conn)
 voltage_df['average'] = voltage_df['value']
 
 # Datos de humedad en suelo
 consulta_sql_hum ="SELECT * 	FROM base, reg_sensor_9 as tipo 	WHERE tipo.sensor = base.sensor_id UNION SELECT * 	FROM base, reg_sensor_10 as tipo 	WHERE tipo.sensor = base.sensor_id UNION SELECT * 	FROM base, reg_sensor_11 as tipo 	WHERE tipo.sensor = base.sensor_id UNION SELECT * 	FROM base, reg_sensor_12 as tipo 	WHERE tipo.sensor = base.sensor_id UNION SELECT * 	FROM base, reg_sensor_13 as tipo 	WHERE tipo.sensor = base.sensor_id UNION SELECT * 	FROM base, reg_sensor_14 as tipo 	WHERE tipo.sensor = base.sensor_id ORDER BY sensor_id, registered_date;"
 humidity_df = pd.read_csv("humidity.csv")
-#humidity_df = pd.read_sql_query(consulta_sql_hum, conn)
+humidity_df = pd.read_sql_query(consulta_sql_hum, conn)
 humidity_df['type_name'] = humidity_df['type_name'].replace('Soil moisture ', '', regex=True)
 
 
 # Datos de temperatura del suelo
 consulta_sql_temp ="SELECT * FROM base, reg_sensor_3 as tipo WHERE tipo.sensor = base.sensor_id UNION SELECT * FROM base, reg_sensor_4 as tipo WHERE tipo.sensor = base.sensor_id UNION SELECT * FROM base, reg_sensor_5 as tipo WHERE tipo.sensor = base.sensor_id UNION SELECT * FROM base, reg_sensor_6 as tipo WHERE tipo.sensor = base.sensor_id UNION SELECT * FROM base, reg_sensor_7 as tipo WHERE tipo.sensor = base.sensor_id UNION SELECT * FROM base, reg_sensor_8 as tipo WHERE tipo.sensor = base.sensor_id ORDER BY sensor_id, registered_date;"
 temp_df = pd.read_csv("temperature.csv")
-#temp_df = pd.read_sql_query(consulta_sql_temp, conn)
+temp_df = pd.read_sql_query(consulta_sql_temp, conn)
 temp_df['type_name'] = temp_df['type_name'].replace('Soil temperature', 'Sensor', regex=True)
 
 
@@ -573,7 +687,7 @@ def show_summary(df_mean, nombre='Medida', rango_semaforo=None):
 # Guardamos las fechas en la que están comprendidos los datos
 startDate = df['registered_date'].min()
 endDate = df['registered_date'].max() 
-endDate = datetime.date(2023, 10, 9)
+#endDate = datetime.date(2023, 10, 9)
 # Por defecto, pretendemos mostrar los gráficos desde un rango temporal de 4 días antes a la fecha actual
 startDate_def = endDate -timedelta(days=4)
 
@@ -677,4 +791,4 @@ selected_page = st.sidebar.radio("Selecciona una página", tuple(pages.keys()))
 # Mostramos el contenido de la página seleccionada
 pages[selected_page]()
 
-#conn.close()
+conn.close()
