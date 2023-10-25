@@ -52,8 +52,8 @@ st.markdown('<style>div.block-container{padding-top:2rem;}</style',
 
 # Elegimos como directorio de trabajo aquel donde se encuentren los datos
 #ruta = r'C:\Users\eci\GEMINI13_digitalTwin\assets\csv'
-ruta = r'C:\Users\eci\GEMINI13_digitalTwin\assets\csv'
-os.chdir(ruta)
+#ruta = r'C:\Users\eci\GEMINI13_digitalTwin\assets\csv'
+#os.chdir(ruta)
 cursor = conn.cursor()
 create_views_sql = """
 CREATE TEMPORARY VIEW base AS
@@ -172,7 +172,7 @@ cursor.execute(create_views_sql)
 #conn.close()
 
 # Datos de diámetro del tall
-consulta_sql = "SELECT * FROM base, reg_sensor_21 as tipo WHERE tipo.sensor = base.sensor_id ORDER BY sensor_id, registered_date;"
+consulta_sql = "SELECT * FROM diameter" #FROM base, reg_sensor_21 as tipo WHERE tipo.sensor = base.sensor_id ORDER BY sensor_id, registered_date;"
 #df = pd.read_csv("diametro.csv")
 df = pd.read_sql_query(consulta_sql, conn)
 
