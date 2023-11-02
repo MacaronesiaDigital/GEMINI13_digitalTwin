@@ -22,7 +22,7 @@ conn = psycopg2.connect(
     database="postgres",
     user="gemini13",
     password="MDPonny!",
-    host="localhost",  # Cambia esto si tu base de datos está en un servidor remoto
+    host="geminiods13.macaronesiadigital.com",  # Cambia esto si tu base de datos está en un servidor remoto
     port="5432"  # Cambia esto si el puerto de tu base de datos es diferente
 )
 print(conn)
@@ -52,8 +52,8 @@ st.markdown('<style>div.block-container{padding-top:2rem;}</style',
 
 # Elegimos como directorio de trabajo aquel donde se encuentren los datos
 #ruta = r'C:\Users\eci\GEMINI13_digitalTwin\assets\csv'
-#ruta = r'C:\Users\eci\GEMINI13_digitalTwin\assets\csv'
-#os.chdir(ruta)
+ruta = r'C:\Users\eci\GEMINI13_digitalTwin\assets\csv'
+os.chdir(ruta)
 cursor = conn.cursor()
 create_views_sql = """
 CREATE TEMPORARY VIEW base AS
@@ -774,6 +774,8 @@ def page_summary():
         show_summary(temp_mean, nombre='Temperatura', rango_semaforo=None)
     #with columnas[2]:
     #    show_summary(temp_mean, nombre='Temperatura', rango_semaforo=None)
+
+
 
 # Configuramos la navegacción por páginas el sidebar
 # Cabe notar que por defecto la primera en mostrarse es la primera definida en el diccionario
