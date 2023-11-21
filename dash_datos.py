@@ -41,14 +41,9 @@ gemini_icon = 'https://dsm01pap006files.storage.live.com/y4m3V8LKKeJnD1a0AxWuavo
 # Título de la pestaña de la app web
 st.set_page_config(page_title='GEMINIODS13', page_icon=gemini_icon, layout='wide')
 
-with open('style.css') as f:
-    css_code = f.read()
 
 # Aplicar los estilos al cuerpo de la aplicación
-st.markdown(f'<style>{css_code}</style>', unsafe_allow_html=True)
-
-
-
+#st.markdown(f'<style>{css_code}</style>', unsafe_allow_html=True)
 
 
 # Esto hace que el margen superior sea más pequeño, pues por efecto está muy separado
@@ -61,8 +56,8 @@ st.markdown('<style>div.block-container{padding-top:2rem;}</style',
 
 
 # Elegimos como directorio de trabajo aquel donde se encuentren los datos
+ruta = r'/home/geminiods13/GEMINI13_digitalTwin/assets/csv'
 #ruta = r'C:\Users\eci\GEMINI13_digitalTwin\assets\csv'
-ruta = r'C:\Users\eci\GEMINI13_digitalTwin\assets\csv'
 os.chdir(ruta)
 cursor = conn.cursor()
 create_views_sql = """
@@ -751,7 +746,7 @@ def page_analysis():
     if len(df_f) == 0: 
         flag = True
         #date2 = datetime(year=2023, month=10, day=9)
-        date1 = datetime(year=2023, month=10, day=1)
+        date1 = datetime(year=2023, month=9, day=20)
     
     df_f = date_filter(df_filtered, date1, date2)
     ion_content_f= date_filter(ion_content_filtered, date1, date2)
@@ -777,7 +772,7 @@ def page_analysis():
     show_dashboard(voltage_f, voltage_mean, key='Voltaje', rango_semaforo=voltage_range,
                    date1=date1, date2=date2)
     if flag:
-        st.warning('Mostrando datos hasta el 9 de octubre')
+        st.markdown('<div class="custom-warning">Mostrando datos hasta el 9 de octubre</div>', unsafe_allow_html=True)
     st.markdown('---')
 
     #st.markdown('## :zap: Contenido iónico volumétrico en suelo')
@@ -786,7 +781,7 @@ def page_analysis():
     show_dashboard(ion_content_f, ion_content_mean, key='VIC', rango_semaforo=ion_content_range,
                    date1=date1, date2=date2)
     if flag:
-        st.warning('Mostrando datos hasta el 9 de octubre')
+        st.markdown('<div class="custom-warning">Mostrando datos hasta el 9 de octubre</div>', unsafe_allow_html=True)
     st.markdown('---')
 
     humidity_icon = 'https://dsm01pap006files.storage.live.com/y4mnLNsaqguhsfFukAYV-2SPQLnyB28aCf6VpPM_Z038pg1v7SM3Q7mhpFbN4bE0PCflCrO75TPkuxFdgCfMysdttKww0rX-WjHZEI_iZsx9-hwEKWn6zExWhD6Up54nT2XsLYkeZQ1cEJMy7z4E-EtjGn1VwoC3Lijv9ysv7Jz3K7m6OmQey3YOUKBOui0WgPN3KGN4ARijUlLYWw4RDQuvQ?encodeFailures=1&width=598&height=800'
@@ -795,7 +790,7 @@ def page_analysis():
     show_dashboard(humidity_f, humidity_mean, key='Humedad', rango_semaforo=humidity_range, 
                    date1=date1, date2=date2)
     if flag:
-        st.warning('Mostrando datos hasta el 9 de octubre')
+        st.markdown('<div class="custom-warning">Mostrando datos hasta el 9 de octubre</div>', unsafe_allow_html=True)
     st.markdown('---')
 
     temp_icon = 'https://dsm01pap006files.storage.live.com/y4mrEz_57VGq_1bMMB0w9q78-uORaywcwBi4AOQuoZkoU7ee1Gqk5HLrRY0h_TrVJ3guBHB3ZswhQJufQp-KB4peBwjF7vo3ZPqnT9sh2wtL-Ii1FftzPJ3RbiDBoF7N_mRKJkvfhdC3ZbHYV4Hw0Tw0oo278NMAtB7JGVVErqr8VmBbmAPN0NJ6gzD9doAnpRol5Inr_0Hjau5G0N2rs5qRw?encodeFailures=1&width=439&height=810'
@@ -804,7 +799,7 @@ def page_analysis():
     show_dashboard(temp_f, temp_mean, key='Temperatura', rango_semaforo=None,
                    date1=date1, date2=date2)
     if flag:
-        st.warning('Mostrando datos hasta el 9 de octubre')
+        st.markdown('<div class="custom-warning">Mostrando datos hasta el 9 de octubre</div>', unsafe_allow_html=True)
     st.markdown('---')
 
 # Definimos la página de 'Resumen'
